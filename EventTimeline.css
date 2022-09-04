@@ -1,0 +1,75 @@
+#EventTimeline {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	font-family: sans-serif;
+	--year-h: 4px;
+}
+
+/* .......................................................................... */
+#EventTimeline-line {
+	position: absolute;
+	top: 0;
+	width: 20px;
+	margin-left: 50px;
+	background-color: indianred;
+}
+#EventTimeline-line,
+#EventTimeline-events {
+	height: calc( 21 * 100 * var( --year-h ) );
+}
+
+/* .......................................................................... */
+#EventTimeline-centuries {
+	height: 50%;
+}
+.EventTimeline-century {
+	position: relative;
+	height: calc( 100 * var( --year-h ) );
+	background-color: #eee;
+}
+.EventTimeline-century:nth-child( odd ) {
+	background-color: #ddd;
+}
+.EventTimeline-century::after {
+	content: attr( data-text );
+	position: absolute;
+	right: .3ch;
+	bottom: .5em;
+	font-size: min( calc( 10 * var( --year-h ) ), 128px );
+	font-family: serif;
+	line-height: 0;
+	opacity: .1;
+	pointer-events: none;
+}
+
+/* .......................................................................... */
+#EventTimeline-events {
+	position: absolute;
+	width: 100%;
+	top: 0;
+}
+.EventTimeline-event {
+	position: absolute;
+	display: flex;
+	left: 50px;
+	right: 0;
+}
+.EventTimeline-event-line {
+	width: 20px;
+	height: 2px;
+	background-color: #fff;
+}
+.EventTimeline-event-info {
+	display: flex;
+	gap: 1ch;
+	margin-top: -.5em;
+	font-size: 12px;
+	text-shadow:
+		0 1px #fff,
+		0 2px 2px #fff;
+}
+.EventTimeline-event-date {
+	margin-left: 1ch;
+	font-weight: bold;
+}
