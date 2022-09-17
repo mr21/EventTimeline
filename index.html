@@ -56,6 +56,20 @@ function calcYear( dateStr ) {
 	return +yyyy + ( mm - 1 ) / 12 + ( dd - 1 ) / 30 / 12;
 }
 
+elTimeline.addEventListener( "wheel", e => {
+	if ( e.ctrlKey ) {
+		const zoom = 1 + Math.min( Math.abs( e.deltaY ), 20 ) / 100;
+		const yearA = parseFloat( getComputedStyle( elTimeline ).getPropertyValue( "--year-h" ) );
+		const yearB = e.deltaY > 0 ? yearA / zoom : yearA * zoom;
+		const mouseYearA = e.pageY / yearA;
+		const mouseYearB = e.pageY / yearB;
+
+		e.preventDefault();
+		elTimeline.style.setProperty( "--year-h", `${ yearB }px` );
+		document.documentElement.scrollTop -= (mouseYearB - mouseYearA) * yearB;
+	}
+} );
+
 const allEventsArr = Object.entries( EventsTimeline_events ).sort( ( a, b ) => {
 	const yA = calcYear( a[ 1 ].date );
 	const yB = calcYear( b[ 1 ].date );
