@@ -11,48 +11,44 @@
 
 <div id="EventTimeline">
 	<div id="EventTimeline-centuries">
-		<div class="EventTimeline-century" data-nb="21" data-text="XXI"></div>
-		<div class="EventTimeline-century" data-nb="20" data-text="XX"></div>
-		<div class="EventTimeline-century" data-nb="19" data-text="XIX"></div>
-		<div class="EventTimeline-century" data-nb="18" data-text="XVIII"></div>
-		<div class="EventTimeline-century" data-nb="17" data-text="XVII"></div>
-		<div class="EventTimeline-century" data-nb="16" data-text="XVI"></div>
-		<div class="EventTimeline-century" data-nb="15" data-text="XV"></div>
-		<div class="EventTimeline-century" data-nb="14" data-text="XIV"></div>
-		<div class="EventTimeline-century" data-nb="13" data-text="XIII"></div>
-		<div class="EventTimeline-century" data-nb="12" data-text="XII"></div>
-		<div class="EventTimeline-century" data-nb="11" data-text="XI"></div>
-		<div class="EventTimeline-century" data-nb="10" data-text="X"></div>
-		<div class="EventTimeline-century" data-nb="9" data-text="IX"></div>
-		<div class="EventTimeline-century" data-nb="8" data-text="VIII"></div>
-		<div class="EventTimeline-century" data-nb="7" data-text="VII"></div>
-		<div class="EventTimeline-century" data-nb="6" data-text="VI"></div>
-		<div class="EventTimeline-century" data-nb="5" data-text="V"></div>
-		<div class="EventTimeline-century" data-nb="4" data-text="IV"></div>
-		<div class="EventTimeline-century" data-nb="3" data-text="III"></div>
-		<div class="EventTimeline-century" data-nb="2" data-text="II"></div>
-		<div class="EventTimeline-century" data-nb="1" data-text="I"></div>
+		<div class="EventTimeline-century" data-text="XXI"></div>
+		<div class="EventTimeline-century" data-text="XX"></div>
+		<div class="EventTimeline-century" data-text="XIX"></div>
+		<div class="EventTimeline-century" data-text="XVIII"></div>
+		<div class="EventTimeline-century" data-text="XVII"></div>
+		<div class="EventTimeline-century" data-text="XVI"></div>
+		<div class="EventTimeline-century" data-text="XV"></div>
+		<div class="EventTimeline-century" data-text="XIV"></div>
+		<div class="EventTimeline-century" data-text="XIII"></div>
+		<div class="EventTimeline-century" data-text="XII"></div>
+		<div class="EventTimeline-century" data-text="XI"></div>
+		<div class="EventTimeline-century" data-text="X"></div>
+		<div class="EventTimeline-century" data-text="IX"></div>
+		<div class="EventTimeline-century" data-text="VIII"></div>
+		<div class="EventTimeline-century" data-text="VII"></div>
+		<div class="EventTimeline-century" data-text="VI"></div>
+		<div class="EventTimeline-century" data-text="V"></div>
+		<div class="EventTimeline-century" data-text="IV"></div>
+		<div class="EventTimeline-century" data-text="III"></div>
+		<div class="EventTimeline-century" data-text="II"></div>
+		<div class="EventTimeline-century" data-text="I"></div>
 	</div>
 	<div id="EventTimeline-line"></div>
 	<div id="EventTimeline-events"></div>
-<div>
+</div>
 
 <script>function lg( a ) { return console.log( ...arguments ), a; }</script>
 <script src="utils.js"></script>
 <script src="data/ranges.js"></script>
 <script src="data/events.js"></script>
 <script>
+const elTimeline = document.querySelector( "#EventTimeline" );
+const elEvents = document.querySelector( "#EventTimeline-events" );
 
 const now = new Date();
 const nowYYYY = now.getFullYear();
 const nowMM = ( now.getMonth() + 1 ).toString().padStart( 2, "0" );
 const nowDD = now.toString().split( " " )[ 2 ];
-
-EventsTimeline_events.now = {
-	name: "Now",
-	date: `${ nowYYYY }/${ nowMM }/${ nowDD }`,
-	tags: "",
-};
 
 function calcYear( dateStr ) {
 	const [ yyyy, mm, dd ] = dateStr.split( "/" );
@@ -60,17 +56,22 @@ function calcYear( dateStr ) {
 	return +yyyy + ( mm - 1 ) / 12 + ( dd - 1 ) / 30 / 12;
 }
 
-const elEvents = document.querySelector( "#EventTimeline-events" );
 const allEventsArr = Object.entries( EventsTimeline_events ).sort( ( a, b ) => {
 	const yA = calcYear( a[ 1 ].date );
 	const yB = calcYear( b[ 1 ].date );
 
 	return yA - yB;
 } );
+
+const allRangesArr = Object.entries( EventsTimeline_ranges ).sort( ( a, b ) => {
+	const yA = calcYear( EventsTimeline_events[ a[ 1 ].first ].date );
+	const yB = calcYear( EventsTimeline_events[ b[ 1 ].first ].date );
+
+	return yA - yB;
+} );
+
 const allEvents = allEventsArr.map( ( [ id, evnt ], i ) => {
-	const yearFloat = calcYear( evnt.date );
-	const top = `calc( ${ 2100 - yearFloat } * var( --year-h ) )`;
-	const el = GSUI.$createElement( "div", { class: "EventTimeline-event", "data-id": id },
+	const el = GSUI.$createElement( "div", { class: "EventTimeline-event", "data-id": id, "data-date": evnt.date, "data-ranges": evnt.ranges },
 		GSUI.$createElement( "div", { class: "EventTimeline-event-line" } ),
 		GSUI.$createElement( "div", { class: "EventTimeline-event-info" },
 			GSUI.$createElement( "div", { class: "EventTimeline-event-date" }, evnt.date ),
@@ -78,11 +79,36 @@ const allEvents = allEventsArr.map( ( [ id, evnt ], i ) => {
 		),
 	);
 
-	el.style.top = top;
 	return el;
 } );
 
-elEvents.append( ...allEvents );
+const allRangesMap = {};
+const allRanges = allRangesArr.map( ( [ id, range ], i ) => {
+	const yearA = calcYear( EventsTimeline_events[ range.first ].date );
+	const yearB = calcYear( EventsTimeline_events[ range.last ].date );
+	const el = GSUI.$createElement( "div", { class: "EventTimeline-range", "data-id": id, "data-duration": yearB - yearA, "data-date-end": EventsTimeline_events[ range.last ].date },
+		GSUI.$createElement( "div", { class: "EventTimeline-range-info" },
+			// GSUI.$createElement( "div", { class: "EventTimeline-range-name" }, range.name ),
+		),
+	);
+
+	el.style.top = `calc( ${ 2100 - yearB } * var( --year-h ) )`;
+	el.style.height = `calc( ${ yearB - yearA } * var( --year-h ) )`;
+	allRangesMap[ id ] = el;
+	return el;
+} );
+
+allEvents.forEach( el => {
+	const range = allRangesMap[ el.dataset.ranges ];
+	const rgYearFloat = calcYear( range.dataset.dateEnd );
+	const evYearFloat = calcYear( el.dataset.date );
+	const rgDur = range.dataset.duration;
+
+	el.style.top = `calc( ${ ( rgYearFloat - evYearFloat ) / rgDur } * 100% )`;
+	range.append( el );
+} );
+
+elEvents.append( ...allRanges );
 
 </script>
 </body>
