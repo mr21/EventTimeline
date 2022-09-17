@@ -1,20 +1,20 @@
 const EventsTimeline_ranges = {
 	ww2: {
 		name: "World War 2",
-		first: "ww2Start",
-		last: "ww2End",
+		start: "1939/09/01",
+		end: "1945/09/02",
 		tags: "war,ww2",
 	},
 	ww1: {
 		name: "World War 1",
-		first: "ww1Start",
-		last: "ww1End",
+		start: "1914/07/28",
+		end: "1918/11/11",
 		tags: "war,ww1",
 	},
 	coldwar: {
 		name: "Cold War",
-		first: "coldwarStart",
-		last: "coldwarEnd",
+		start: "1947/03/12",
+		end: "1991/12/26",
 		tags: "coldwar",
 	},
 };

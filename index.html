@@ -70,19 +70,13 @@ elTimeline.addEventListener( "wheel", e => {
 	}
 } );
 
-const allEventsArr = Object.entries( EventsTimeline_events ).sort( ( a, b ) => {
-	const yA = calcYear( a[ 1 ].date );
-	const yB = calcYear( b[ 1 ].date );
+const allEventsArr = Object.entries( EventsTimeline_events ).sort( ( a, b ) =>
+	calcYear( a[ 1 ].date ) - calcYear( b[ 1 ].date )
+);
 
-	return yA - yB;
-} );
-
-const allRangesArr = Object.entries( EventsTimeline_ranges ).sort( ( a, b ) => {
-	const yA = calcYear( EventsTimeline_events[ a[ 1 ].first ].date );
-	const yB = calcYear( EventsTimeline_events[ b[ 1 ].first ].date );
-
-	return yA - yB;
-} );
+const allRangesArr = Object.entries( EventsTimeline_ranges ).sort( ( a, b ) =>
+	calcYear( a[ 1 ].start ) - calcYear( b[ 1 ].start )
+);
 
 const allEvents = allEventsArr.map( ( [ id, evnt ], i ) => {
 	const el = GSUI.$createElement( "div", { class: "EventTimeline-event", "data-id": id, "data-date": evnt.date, "data-ranges": evnt.ranges },
@@ -98,9 +92,9 @@ const allEvents = allEventsArr.map( ( [ id, evnt ], i ) => {
 
 const allRangesMap = {};
 const allRanges = allRangesArr.map( ( [ id, range ], i ) => {
-	const yearA = calcYear( EventsTimeline_events[ range.first ].date );
-	const yearB = calcYear( EventsTimeline_events[ range.last ].date );
-	const el = GSUI.$createElement( "div", { class: "EventTimeline-range", "data-id": id, "data-duration": yearB - yearA, "data-date-end": EventsTimeline_events[ range.last ].date },
+	const yearA = calcYear( range.start );
+	const yearB = calcYear( range.end );
+	const el = GSUI.$createElement( "div", { class: "EventTimeline-range", "data-id": id, "data-duration": yearB - yearA, "data-date-end": range.end },
 		GSUI.$createElement( "div", { class: "EventTimeline-range-info" },
 			// GSUI.$createElement( "div", { class: "EventTimeline-range-name" }, range.name ),
 		),
