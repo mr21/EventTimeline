@@ -17,4 +17,10 @@ const EventsTimeline_ranges = {
 		end: "1991/12/26",
 		tags: "coldwar",
 	},
+	frenchRevolution: {
+		name: "French Revolution",
+		start: "1789/05/05",
+		end: "1799/11/09",
+		tags: "war,revolution",
+	},
 };

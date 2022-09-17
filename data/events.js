@@ -34,4 +34,14 @@ const EventsTimeline_events = {
 		date: "1918/11/11",
 		ranges: "ww1",
 	},
+	stormingOfTheBastille: {
+		name: "Storming Of The Bastille",
+		date: "1789/07/14",
+		ranges: "frenchRevolution",
+	},
+	coupOf18Brumaire: {
+		name: "Coup of 18 Brumaire",
+		date: "1799/11/09",
+		ranges: "frenchRevolution",
+	},
 };
